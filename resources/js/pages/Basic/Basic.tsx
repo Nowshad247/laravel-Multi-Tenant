@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
+import { dashboard } from '@/routes/central';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import {
@@ -18,7 +18,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     
 ];
-
 export default function Dashboard() {
     const { data, setData, post, processing, errors } = useForm({
         name: 'Nowshad',
@@ -53,7 +52,6 @@ const handeSubmit = (e: React.FormEvent) => {
                     </div>
                     <Button type="submit">Add Student </Button>  
                 </form>
-
             </div>
         </AppLayout>
     );

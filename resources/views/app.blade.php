@@ -30,11 +30,26 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        @php
+            $settings = $settings ?? $page['props']['settings'] ?? [];
+            $siteName = $settings['site_name'] ?? config('app.name', 'Laravel');
+            $siteDescription = $settings['site_description'] ?? '';
+            $siteKeywords = $settings['site_keywords'] ?? '';
+            $siteAuthor = $settings['site_author'] ?? '';
+            $siteIcon = $settings['site_icon'] ?? null;
+            $siteLogo = $settings['site_logo'] ?? null;
+            $iconUrl = $siteIcon ? (str_starts_with($siteIcon, ['http://', 'https://', '/']) ? $siteIcon : asset($siteIcon)) : asset('favicon.ico');
+            $logoUrl = $siteLogo ? (str_starts_with($siteLogo, ['http://', 'https://', '/']) ? $siteLogo : asset($siteLogo)) : asset('apple-touch-icon.png');
+        @endphp
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <title inertia>{{ $siteName }}</title>
+        <meta name="description" content="{{ $siteDescription }}">
+        <meta name="keywords" content="{{ $siteKeywords }}">
+        <meta name="author" content="{{ $siteAuthor }}">
+
+        <link rel="icon" href="{{ $iconUrl }}" sizes="any">
+        <link rel="icon" href="{{ $iconUrl }}" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="{{ $logoUrl }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

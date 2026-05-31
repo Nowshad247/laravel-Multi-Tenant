@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Settings;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -38,21 +40,29 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $settings = Schema::hasTable('settings') ? Settings::allSettings() : [];
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => fn () => $request->user()
+                    ? array_merge(
+                        $request->user()->only(['id', 'name', 'email', 'email_verified_at']),
+                        ['roles' => $request->user()->getRoleNames()->all()]
+                    )
+                    : null,
             ],
             'flash' => [
-            'success' => fn () => $request->session()->get('success'),
-            'error'   => fn () => $request->session()->get('error'),
-            'warning' => fn () => $request->session()->get('warning'),
-            'info'    => fn () => $request->session()->get('info'),
-            // unified `message` key: first available flash (success, info, warning, error)
-            'message' => fn () => $request->session()->get('success') ?? $request->session()->get('info') ?? $request->session()->get('warning') ?? $request->session()->get('error'),
-        ],
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'warning' => fn () => $request->session()->get('warning'),
+                'info' => fn () => $request->session()->get('info'),
+                // unified `message` key: first available flash (success, info, warning, error)
+                'message' => fn () => $request->session()->get('success') ?? $request->session()->get('info') ?? $request->session()->get('warning') ?? $request->session()->get('error'),
+            ],
+            'settings' => fn () => $settings,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

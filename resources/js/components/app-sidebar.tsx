@@ -10,27 +10,24 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+
+import { dashboard } from '@/routes/central';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid , TableProperties } from 'lucide-react';
+import { usePage } from '@inertiajs/react';
+import {  LayoutGrid ,  } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: '/dashboard',
         icon: LayoutGrid,
     },
     {
-        title: 'Home',
-        href: '/',
-        icon: TableProperties,
-    },
-        {
-        title: 'Basic',
-        href: '/basic',
-        icon: TableProperties,
+        title: 'Manage Users',
+        href: '/manage-users',
+        icon: LayoutGrid,
     },
 ];
 
@@ -48,13 +45,17 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    // Cast via unknown to satisfy TypeScript when PageProps may not exactly match our shape
+    const { auth } = usePage().props as unknown as { auth: { user: { roles: string[] } | null } };
+    const isSuperAdminOrEditor = auth.user?.roles?.some((r: string) => ['Super Admin','Editor'].includes(r));
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={dashboard().url} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -63,7 +64,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={isSuperAdminOrEditor ? mainNavItems : []} />
             </SidebarContent>
 
             <SidebarFooter>
