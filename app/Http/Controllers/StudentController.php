@@ -6,7 +6,6 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class StudentController extends Controller
 {
@@ -28,6 +27,7 @@ class StudentController extends Controller
             'email' => 'required|email|unique:students,email',
         ]);
         Student::create($request->only('name', 'email'));
+
         return redirect('dashboard')->with('success', 'Student created successfully');
     }
 

@@ -6,6 +6,7 @@ use App\Models\Settings;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -50,7 +51,12 @@ class HandleInertiaRequests extends Middleware
                 'user' => fn () => $request->user()
                     ? array_merge(
                         $request->user()->only(['id', 'name', 'email', 'email_verified_at']),
-                        ['roles' => $request->user()->getRoleNames()->all()]
+                        [
+                            'roles' => $request->user()->getRoleNames()->all(),
+                            'avatar' => $request->user()->avatar
+                                ? Storage::url($request->user()->avatar)
+                                : null,
+                        ]
                     )
                     : null,
             ],

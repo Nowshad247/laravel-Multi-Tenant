@@ -31,4 +31,9 @@ class Settings extends Model
 
         return self::$cache;
     }
+
+    public static function clearStaticCache(): void
+    {
+        self::$cache = [];
+    }
 }

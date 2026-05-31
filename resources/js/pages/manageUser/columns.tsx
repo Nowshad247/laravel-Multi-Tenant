@@ -38,7 +38,7 @@ export const columns: ColumnDef<UserTable>[] = [
         const id = row.getValue<number>('id')
         return (
             <div className="flex gap-2">
-                <button type="button" onClick={()=>router.get(`/users/${id}`)} className="px-2 py-1 text-sm text-white bg-black rounded hover:bg-gray-600">
+                <button type="button" onClick={()=>router.get(`/central/admin/show-user/${id}`)} className="px-2 py-1 text-sm text-white bg-black rounded hover:bg-gray-600">
                     <Eye className="w-4 h-4" />
                 </button>
             </div>

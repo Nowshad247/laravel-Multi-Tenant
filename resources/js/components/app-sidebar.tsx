@@ -15,7 +15,7 @@ import { dashboard } from '@/routes/central';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import {  LayoutGrid ,  } from 'lucide-react';
+import { LayoutGrid, ShieldCheck , SlidersHorizontal,UsersRound} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -27,27 +27,38 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Manage Users',
         href: '/manage-users',
-        icon: LayoutGrid,
+        icon: UsersRound,
     },
 ];
 
 const footerNavItems: NavItem[] = [
-    // {
-    //     title: 'Repository',
-    //     href: 'https://github.com/laravel/react-starter-kit',
-    //     icon: Folder,
-    // },
-    // {
-    //     title: 'Documentation',
-    //     href: 'https://laravel.com/docs/starter-kits#react',
-    //     icon: BookOpen,
-    // },
+    
 ];
 
 export function AppSidebar() {
-    // Cast via unknown to satisfy TypeScript when PageProps may not exactly match our shape
     const { auth } = usePage().props as unknown as { auth: { user: { roles: string[] } | null } };
-    const isSuperAdminOrEditor = auth.user?.roles?.some((r: string) => ['Super Admin','Editor'].includes(r));
+    const isSuperAdminOrEditor = auth.user?.roles?.some((r: string) =>
+        ['Super Admin', 'Editor'].includes(r),
+    );
+    const isSuperAdmin = auth.user?.roles?.includes('Super Admin');
+
+    const navItems: NavItem[] = [
+        ...mainNavItems,
+        ...(isSuperAdmin
+            ? [
+                  {
+                      title: 'Manage Permissions',
+                      href: '/userspermissions',
+                      icon: ShieldCheck,
+                  } satisfies NavItem,
+                  {
+                      title: 'Configuration',
+                      href: '/settings',
+                      icon: SlidersHorizontal,
+                  } satisfies NavItem,
+              ]
+            : []),
+    ];
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -64,7 +75,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={isSuperAdminOrEditor ? mainNavItems : []} />
+                <NavMain items={isSuperAdminOrEditor ? navItems : []} />
             </SidebarContent>
 
             <SidebarFooter>
