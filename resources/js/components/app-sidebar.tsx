@@ -15,7 +15,7 @@ import { dashboard } from '@/routes/central';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import { LayoutGrid, ShieldCheck , SlidersHorizontal,UsersRound} from 'lucide-react';
+import { Boxes, LayoutGrid, ShieldCheck , SlidersHorizontal,UsersRound} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -25,10 +25,16 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'Company',
+        href: '/admin/tenant/dashboard',
+        icon: Boxes,
+    },
+    {
         title: 'Manage Users',
         href: '/manage-users',
         icon: UsersRound,
     },
+    
 ];
 
 const footerNavItems: NavItem[] = [

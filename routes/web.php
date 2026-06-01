@@ -4,6 +4,7 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TenantController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -64,9 +65,24 @@ foreach (config('tenancy.central_domains') as $domain) {
                 return Inertia::render('dashboard');
             })->name('central.dashboard');
 
-            Route::get('/basic', function () {
-                return Inertia::render('basic');
-            })->name('central.basic');
+            // super admin Tenant routes
+
+            Route::middleware(['role:Super Admin'])->group(function () {
+
+                Route::get('/admin/tenant/dashboard', [TenantController::class, 'index'])->name('tenants.index');
+
+                Route::get('/admin/tenants/create', function () {
+                    return Inertia::render('Tenants/Create');
+                })->name('tenants.create');
+
+                Route::get('/admin/tenants/{tenant}', function ($tenant) {
+                    return Inertia::render('Tenants/Show', ['tenantId' => $tenant]);
+                })->name('tenants.show');
+
+                Route::get('/admin/tenants/{tenant}/edit', function ($tenant) {
+                    return Inertia::render('Tenants/Edit', ['tenantId' => $tenant]);
+                })->name('tenants.edit');
+            });
         });
 
         Route::get('/show', [StudentController::class, 'index'])->name('student.show');

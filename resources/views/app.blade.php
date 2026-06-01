@@ -38,8 +38,8 @@
             $siteAuthor = $settings['site_author'] ?? '';
             $siteIcon = $settings['site_icon'] ?? null;
             $siteLogo = $settings['site_logo'] ?? null;
-            $iconUrl = $siteIcon ? (str_starts_with($siteIcon, ['http://', 'https://', '/']) ? $siteIcon : asset($siteIcon)) : asset('favicon.ico');
-            $logoUrl = $siteLogo ? (str_starts_with($siteLogo, ['http://', 'https://', '/']) ? $siteLogo : asset($siteLogo)) : asset('apple-touch-icon.png');
+            $iconUrl = $siteIcon ? (\Illuminate\Support\Str::startsWith($siteIcon, ['http://', 'https://', '/']) ? $siteIcon : asset($siteIcon)) : asset('favicon.ico');
+            $logoUrl = $siteLogo ? (\Illuminate\Support\Str::startsWith($siteLogo, ['http://', 'https://', '/']) ? $siteLogo : asset($siteLogo)) : asset('apple-touch-icon.png');
         @endphp
 
         <title inertia>{{ $siteName }}</title>
